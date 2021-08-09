@@ -14,25 +14,55 @@ class ViewController: UIViewController {
         button.backgroundColor = .white
         button.setTitleColor(.black, for: .normal)
         button.addTarget(self, action: #selector(didTapButton), for: .touchUpInside)
+        button.translatesAutoresizingMaskIntoConstraints = false
+      
+    
         return button
+    }()
+    
+    private let button2: UIButton = {
+       let button2 = UIButton()
+        button2.setTitle("Show TableView", for: .normal)
+        button2.backgroundColor = .white
+        button2.setTitleColor(.black, for: .normal)
+        button2.addTarget(self, action: #selector(didTapButtonTwo), for: .touchUpInside)
+        button2.translatesAutoresizingMaskIntoConstraints = false
+        return button2
     }()
 
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBlue
         view.addSubview(button)
+        view.addSubview(button2)
+        anchor()
         
         
     }
-    
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        button.center = view.center
+    public func anchor(){
+        button.topAnchor.constraint(equalTo: view.topAnchor, constant: 200).isActive = true
+        button.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 100).isActive = true
+        button.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -100).isActive = true
+        
+        button2.topAnchor.constraint(equalTo: button.bottomAnchor, constant: 20).isActive = true
+        button2.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 100).isActive = true
+        button2.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -100).isActive = true
+        
+       
+        
+         
     }
     
+    @objc func didTapButtonTwo(){
+        print("tapped")
+        let vc = NewViewController()
+        navigationController?.pushViewController(vc, animated: true)
+    }
     @objc func didTapButton (){
         print("tapped")
+        
         let tabBarVC = UITabBarController()
+        tabBarVC.dismiss(animated: true, completion: nil)
         let vc1 = UINavigationController(rootViewController: FirstViewController())
         let vc2 = UINavigationController(rootViewController:SecondViewController())
         let vc3 = UINavigationController(rootViewController:ThirdViewController())
@@ -60,6 +90,7 @@ class ViewController: UIViewController {
 
 }
 class FirstViewController:UIViewController{
+    
     override func viewDidLoad() {
         view.backgroundColor = .green
        title = "Home"
@@ -92,4 +123,32 @@ class FiveViewController:UIViewController{
         view.backgroundColor = .yellow
         title = "Settings"
     }
+}
+
+class NewViewController:UIViewController{
+    @IBOutlet var tableView: UITableView!
+ 
+    override func viewDidLoad() {
+        tableView?.delegate = self
+        tableView?.dataSource = self
+        view.backgroundColor = .black
+        
+    }
+}
+extension NewViewController: UITableViewDelegate{
+    
+}
+
+extension NewViewController: UITableViewDataSource{
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return 1
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
+        cell.textLabel?.text = "test"
+        return cell
+    }
+    
+    
 }
